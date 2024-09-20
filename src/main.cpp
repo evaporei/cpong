@@ -10,12 +10,30 @@
 #define PADDLE_WIDTH 15
 #define PADDLE_HEIGHT 60
 
+#define PADDLE_SPEED 600
+
 #define BALL_WIDTH 12
 #define BALL_HEIGHT 12
 
 typedef struct Player {
     Vector2 pos;
 } Player;
+
+void handleInput(Player *p1, Player *p2) {
+    float dt = GetFrameTime();
+
+    if (IsKeyDown(KEY_W)) {
+        p1->pos.y = p1->pos.y - PADDLE_SPEED * dt;
+    } else if (IsKeyDown(KEY_S)) {
+        p1->pos.y = p1->pos.y + PADDLE_SPEED * dt;
+    }
+
+    if (IsKeyDown(KEY_UP)) {
+        p2->pos.y = p2->pos.y - PADDLE_SPEED * dt;
+    } else if (IsKeyDown(KEY_DOWN)) {
+        p2->pos.y = p2->pos.y + PADDLE_SPEED * dt;
+    }
+}
 
 int main(void) {
 #ifndef DEBUG
@@ -35,6 +53,8 @@ int main(void) {
     Player p2 = { .pos = Vector2{WIDTH - 30, HEIGHT - 150} };
 
     while (!WindowShouldClose()) {
+        handleInput(&p1, &p2);
+
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
             DrawTextEx(font, "pong", title_pos, FONT_SIZE, 0, LIGHTGRAY);
