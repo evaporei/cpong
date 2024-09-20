@@ -1,0 +1,14 @@
+.cache/
+zig-out/
+.zig-cache/
+zig-cache/
+build/
+debug/
+release/
+Makefile
+cmake_install.cmake
+CMakeCache.txt
+compile_commands.json
+CMakeFiles/
+.DS_Store
+**/.DS_Store
