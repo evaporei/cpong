@@ -7,6 +7,16 @@
 #define TITLE "pong"
 #define FONT_SIZE 32
 
+#define PADDLE_WIDTH 15
+#define PADDLE_HEIGHT 60
+
+#define BALL_WIDTH 12
+#define BALL_HEIGHT 12
+
+typedef struct Player {
+    Vector2 pos;
+} Player;
+
 int main(void) {
 #ifndef DEBUG
     SetTraceLogLevel(LOG_ERROR);
@@ -21,10 +31,22 @@ int main(void) {
         (60.f / 2) - title_size.y / 2.f
     };
 
+    Player p1 = { .pos = Vector2{30, 90} };
+    Player p2 = { .pos = Vector2{WIDTH - 30, HEIGHT - 150} };
+
     while (!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
-            DrawTextEx(font, "pong", title_pos, FONT_SIZE, 0, BLACK);
+            DrawTextEx(font, "pong", title_pos, FONT_SIZE, 0, LIGHTGRAY);
+
+            // player 1 (left)
+            DrawRectangle(p1.pos.x, p1.pos.y, PADDLE_WIDTH, PADDLE_HEIGHT, WHITE);
+
+            // player 2 (right)
+            DrawRectangle(p2.pos.x, p2.pos.y, PADDLE_WIDTH, PADDLE_HEIGHT, WHITE);
+
+            // ball
+            DrawRectangle(WIDTH / 2 - BALL_WIDTH / 2, HEIGHT / 2 - BALL_HEIGHT / 2, BALL_WIDTH, BALL_HEIGHT, WHITE);
         EndDrawing();
     }
 
