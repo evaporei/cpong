@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "raylib.h"
+#include <raylib.h>
+#include <raymath.h>
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -15,6 +16,9 @@
 
 #define BALL_WIDTH 12
 #define BALL_HEIGHT 12
+
+#define BALL_VEL_X 300.f
+#define BALL_VEL_Y 150.f
 
 typedef enum State {
     START_STATE,
@@ -68,6 +72,7 @@ void debugState(State state) {
 
 typedef struct Ball {
     Vector2 pos;
+    Vector2 velocity;
 } Ball;
 
 int main(void) {
@@ -75,6 +80,8 @@ int main(void) {
     SetTraceLogLevel(LOG_ERROR);
 #endif
     InitWindow(WIDTH, HEIGHT, "pong");
+
+    // SetRandomSeed(time(NULL));
 
     State state = START_STATE;
 
@@ -89,11 +96,18 @@ int main(void) {
     Player p1 = { .pos = Vector2{15, 90}, .score = 0 };
     Player p2 = { .pos = Vector2{WIDTH - 30, HEIGHT - 150}, .score = 0 };
 
-    Ball ball = { .pos = Vector2{WIDTH / 2.f - BALL_WIDTH / 2.f, HEIGHT / 2.f - BALL_HEIGHT / 2.f} };
+    Ball ball = {
+        .pos = Vector2{WIDTH / 2.f - BALL_WIDTH / 2.f, HEIGHT / 2.f - BALL_HEIGHT / 2.f},
+        .velocity = Vector2{GetRandomValue(0, 1) ? BALL_VEL_X : -BALL_VEL_X, GetRandomValue(0, 1) ? BALL_VEL_Y : -BALL_VEL_Y}
+    };
 
     while (!WindowShouldClose()) {
         handleKeyPressed(&state);
         handleInput(&p1, &p2);
+
+        if (state == PLAY_STATE) {
+            ball.pos = Vector2Add(ball.pos, Vector2Scale(ball.velocity, GetFrameTime()));
+        }
 
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
