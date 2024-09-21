@@ -16,10 +16,28 @@
 #define BALL_WIDTH 12
 #define BALL_HEIGHT 12
 
+typedef enum State {
+    START_STATE,
+    PLAY_STATE
+} State;
+
 typedef struct Player {
     Vector2 pos;
     unsigned int score;
 } Player;
+
+void handleKeyPressed(State *state) {
+    if (IsKeyPressed(KEY_SPACE)) {
+        switch (*state) {
+            case START_STATE:
+                *state = PLAY_STATE;
+                break;
+            case PLAY_STATE:
+                *state = START_STATE;
+                break;
+        }
+    }
+}
 
 void handleInput(Player *p1, Player *p2) {
     float dt = GetFrameTime();
@@ -37,6 +55,17 @@ void handleInput(Player *p1, Player *p2) {
     }
 }
 
+void debugState(State state) {
+    switch (state) {
+        case START_STATE:
+            DrawText("start", 0, 0, 8, WHITE);
+            break;
+        case PLAY_STATE:
+            DrawText("play", 0, 0, 8, WHITE);
+            break;
+    }
+}
+
 typedef struct Ball {
     Vector2 pos;
 } Ball;
@@ -46,6 +75,8 @@ int main(void) {
     SetTraceLogLevel(LOG_ERROR);
 #endif
     InitWindow(WIDTH, HEIGHT, "pong");
+
+    State state = START_STATE;
 
     Font font = LoadFontEx("./font.ttf", SMALL_FONT_SIZE, NULL, 0);
 
@@ -61,10 +92,13 @@ int main(void) {
     Ball ball = { .pos = Vector2{WIDTH / 2.f - BALL_WIDTH / 2.f, HEIGHT / 2.f - BALL_HEIGHT / 2.f} };
 
     while (!WindowShouldClose()) {
+        handleKeyPressed(&state);
         handleInput(&p1, &p2);
 
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
+            debugState(state);
+
             // DrawFPS(0, 0);
             DrawTextEx(font, "pong", title_pos, SMALL_FONT_SIZE, 0, WHITE);
 
