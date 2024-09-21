@@ -37,7 +37,7 @@ typedef struct Ball {
 
 void ball_init(Ball *ball);
 
-void handleKeyPressed(State *state, Ball *ball) {
+void handle_key_pressed(State *state, Ball *ball) {
     if (IsKeyPressed(KEY_SPACE)) {
         switch (*state) {
             case START_STATE:
@@ -51,7 +51,7 @@ void handleKeyPressed(State *state, Ball *ball) {
     }
 }
 
-void handleInput(Player *p1, Player *p2) {
+void handle_input(Player *p1, Player *p2) {
     float dt = GetFrameTime();
 
     if (IsKeyDown(KEY_W)) {
@@ -68,7 +68,7 @@ void handleInput(Player *p1, Player *p2) {
 }
 
 #ifdef DEBUG
-void debugState(State state) {
+void debug_state(State state) {
     switch (state) {
         case START_STATE:
             DrawText("start", 0, 0, 8, WHITE);
@@ -114,15 +114,15 @@ int main(void) {
     ball_init(&ball);
 
     while (!WindowShouldClose()) {
-        handleKeyPressed(&state, &ball);
-        handleInput(&p1, &p2);
+        handle_key_pressed(&state, &ball);
+        handle_input(&p1, &p2);
 
         update(state, &ball);
 
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
 #ifdef DEBUG
-            debugState(state);
+            debug_state(state);
 #endif
 
             // DrawFPS(0, 0);
