@@ -94,6 +94,9 @@ void update(State state, Player *p1, Player *p2, Ball *ball) {
     p1->pos.y += p1->yspeed * dt;
     p2->pos.y += p2->yspeed * dt;
 
+    p1->pos.y = Clamp(p1->pos.y, 0, HEIGHT - PADDLE_HEIGHT);
+    p2->pos.y = Clamp(p2->pos.y, 0, HEIGHT - PADDLE_HEIGHT);
+
     if (state == PLAY_STATE) {
         ball->pos = Vector2Add(ball->pos, Vector2Scale(ball->velocity, dt));
     }
@@ -130,10 +133,10 @@ int main(void) {
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
 #ifdef DEBUG
-            debug_state(state);
+            DrawFPS(0, 0);
+            // debug_state(state);
 #endif
 
-            // DrawFPS(0, 0);
             DrawTextEx(font, "pong", title_pos, SMALL_FONT_SIZE, 0, WHITE);
 
             DrawTextEx(font, TextFormat("%d", p1.score), Vector2{WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
