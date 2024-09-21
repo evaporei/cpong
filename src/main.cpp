@@ -30,13 +30,21 @@ typedef struct Player {
     unsigned int score;
 } Player;
 
-void handleKeyPressed(State *state) {
+typedef struct Ball {
+    Vector2 pos;
+    Vector2 velocity;
+} Ball;
+
+void ball_init(Ball *ball);
+
+void handleKeyPressed(State *state, Ball *ball) {
     if (IsKeyPressed(KEY_SPACE)) {
         switch (*state) {
             case START_STATE:
                 *state = PLAY_STATE;
                 break;
             case PLAY_STATE:
+                ball_init(ball);
                 *state = START_STATE;
                 break;
         }
@@ -59,6 +67,7 @@ void handleInput(Player *p1, Player *p2) {
     }
 }
 
+#ifdef DEBUG
 void debugState(State state) {
     switch (state) {
         case START_STATE:
@@ -69,19 +78,24 @@ void debugState(State state) {
             break;
     }
 }
+#endif
 
-typedef struct Ball {
-    Vector2 pos;
-    Vector2 velocity;
-} Ball;
+void ball_init(Ball *ball) {
+    ball->pos = Vector2{WIDTH / 2.f - BALL_WIDTH / 2.f, HEIGHT / 2.f - BALL_HEIGHT / 2.f};
+    ball->velocity = Vector2{GetRandomValue(0, 1) ? BALL_VEL_X : -BALL_VEL_X, GetRandomValue(0, 1) ? BALL_VEL_Y : -BALL_VEL_Y};
+}
+
+void update(State state, Ball *ball) {
+    if (state == PLAY_STATE) {
+        ball->pos = Vector2Add(ball->pos, Vector2Scale(ball->velocity, GetFrameTime()));
+    }
+}
 
 int main(void) {
 #ifndef DEBUG
     SetTraceLogLevel(LOG_ERROR);
 #endif
     InitWindow(WIDTH, HEIGHT, "pong");
-
-    // SetRandomSeed(time(NULL));
 
     State state = START_STATE;
 
@@ -96,22 +110,20 @@ int main(void) {
     Player p1 = { .pos = Vector2{15, 90}, .score = 0 };
     Player p2 = { .pos = Vector2{WIDTH - 30, HEIGHT - 150}, .score = 0 };
 
-    Ball ball = {
-        .pos = Vector2{WIDTH / 2.f - BALL_WIDTH / 2.f, HEIGHT / 2.f - BALL_HEIGHT / 2.f},
-        .velocity = Vector2{GetRandomValue(0, 1) ? BALL_VEL_X : -BALL_VEL_X, GetRandomValue(0, 1) ? BALL_VEL_Y : -BALL_VEL_Y}
-    };
+    Ball ball;
+    ball_init(&ball);
 
     while (!WindowShouldClose()) {
-        handleKeyPressed(&state);
+        handleKeyPressed(&state, &ball);
         handleInput(&p1, &p2);
 
-        if (state == PLAY_STATE) {
-            ball.pos = Vector2Add(ball.pos, Vector2Scale(ball.velocity, GetFrameTime()));
-        }
+        update(state, &ball);
 
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
+#ifdef DEBUG
             debugState(state);
+#endif
 
             // DrawFPS(0, 0);
             DrawTextEx(font, "pong", title_pos, SMALL_FONT_SIZE, 0, WHITE);
