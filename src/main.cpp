@@ -1,42 +1,17 @@
 #include <stdio.h>
+
 #include <raylib.h>
 #include <raymath.h>
 
-#define WIDTH 1280
-#define HEIGHT 720
-
-#define TITLE "pong"
-#define SMALL_FONT_SIZE 32
-#define SCORE_FONT_SIZE 96
-
-#define PADDLE_WIDTH 15
-#define PADDLE_HEIGHT 60
-
-#define PADDLE_SPEED 600
-
-#define BALL_WIDTH 12
-#define BALL_HEIGHT 12
-
-#define BALL_VEL_X 300.f
-#define BALL_VEL_Y 150.f
-
-typedef enum State {
-    START_STATE,
-    PLAY_STATE
-} State;
+#include "constants.h"
+#include "state.h"
+#include "ball.h"
 
 typedef struct Player {
     Vector2 pos;
     unsigned int score;
     float yspeed;
 } Player;
-
-typedef struct Ball {
-    Vector2 pos;
-    Vector2 velocity;
-} Ball;
-
-void ball_init(Ball *ball);
 
 void handle_key_pressed(State *state, Ball *ball) {
     if (IsKeyPressed(KEY_SPACE)) {
@@ -70,24 +45,6 @@ void handle_input(Player *p1, Player *p2) {
     }
 }
 
-#ifdef DEBUG
-void debug_state(State state) {
-    switch (state) {
-        case START_STATE:
-            DrawText("start", 0, 0, 8, WHITE);
-            break;
-        case PLAY_STATE:
-            DrawText("play", 0, 0, 8, WHITE);
-            break;
-    }
-}
-#endif
-
-void ball_init(Ball *ball) {
-    ball->pos = Vector2{WIDTH / 2.f - BALL_WIDTH / 2.f, HEIGHT / 2.f - BALL_HEIGHT / 2.f};
-    ball->velocity = Vector2{GetRandomValue(0, 1) ? BALL_VEL_X : -BALL_VEL_X, GetRandomValue(0, 1) ? BALL_VEL_Y : -BALL_VEL_Y};
-}
-
 void update(State state, Player *p1, Player *p2, Ball *ball) {
     float dt = GetFrameTime();
 
@@ -97,16 +54,14 @@ void update(State state, Player *p1, Player *p2, Ball *ball) {
     p1->pos.y = Clamp(p1->pos.y, 0, HEIGHT - PADDLE_HEIGHT);
     p2->pos.y = Clamp(p2->pos.y, 0, HEIGHT - PADDLE_HEIGHT);
 
-    if (state == PLAY_STATE) {
-        ball->pos = Vector2Add(ball->pos, Vector2Scale(ball->velocity, dt));
-    }
+    ball_update(ball, state);
 }
 
 int main(void) {
 #ifndef DEBUG
     SetTraceLogLevel(LOG_ERROR);
 #endif
-    InitWindow(WIDTH, HEIGHT, "pong");
+    InitWindow(WIDTH, HEIGHT, TITLE);
 
     State state = START_STATE;
 
@@ -137,7 +92,7 @@ int main(void) {
             // debug_state(state);
 #endif
 
-            DrawTextEx(font, "pong", title_pos, SMALL_FONT_SIZE, 0, WHITE);
+            DrawTextEx(font, TITLE, title_pos, SMALL_FONT_SIZE, 0, WHITE);
 
             DrawTextEx(font, TextFormat("%d", p1.score), Vector2{WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
             DrawTextEx(font, TextFormat("%d", p2.score), Vector2{WIDTH / 2.f + 120, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
@@ -146,7 +101,7 @@ int main(void) {
 
             DrawRectangle(p2.pos.x, p2.pos.y, PADDLE_WIDTH, PADDLE_HEIGHT, WHITE);
 
-            DrawRectangle(ball.pos.x, ball.pos.y, BALL_WIDTH, BALL_HEIGHT, WHITE);
+            ball_draw(ball);
         EndDrawing();
     }
 

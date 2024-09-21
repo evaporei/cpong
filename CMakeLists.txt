@@ -49,6 +49,8 @@ add_subdirectory("${THIRDPARTY_DIR}/raylib")
 set(MY_FLAGS "-std=c++20" "-Wall")
 set(SOURCE_FILES
     "${CMAKE_SOURCE_DIR}/src/main.cpp"
+    "${CMAKE_SOURCE_DIR}/src/ball.cpp"
+    "${CMAKE_SOURCE_DIR}/src/state.cpp"
 )
 
 add_executable(game ${SOURCE_FILES})
