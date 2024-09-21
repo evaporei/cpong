@@ -37,11 +37,15 @@ void handleInput(Player *p1, Player *p2) {
     }
 }
 
+typedef struct Ball {
+    Vector2 pos;
+} Ball;
+
 int main(void) {
 #ifndef DEBUG
     SetTraceLogLevel(LOG_ERROR);
 #endif
-    InitWindow(WIDTH, HEIGHT, "game");
+    InitWindow(WIDTH, HEIGHT, "pong");
 
     Font font = LoadFontEx("./font.ttf", SMALL_FONT_SIZE, NULL, 0);
 
@@ -54,6 +58,8 @@ int main(void) {
     Player p1 = { .pos = Vector2{15, 90}, .score = 0 };
     Player p2 = { .pos = Vector2{WIDTH - 30, HEIGHT - 150}, .score = 0 };
 
+    Ball ball = { .pos = Vector2{WIDTH / 2.f - BALL_WIDTH / 2.f, HEIGHT / 2.f - BALL_HEIGHT / 2.f} };
+
     while (!WindowShouldClose()) {
         handleInput(&p1, &p2);
 
@@ -65,14 +71,11 @@ int main(void) {
             DrawTextEx(font, TextFormat("%d", p1.score), Vector2{WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
             DrawTextEx(font, TextFormat("%d", p2.score), Vector2{WIDTH / 2.f + 120, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
 
-            // player 1 (left)
             DrawRectangle(p1.pos.x, p1.pos.y, PADDLE_WIDTH, PADDLE_HEIGHT, WHITE);
 
-            // player 2 (right)
             DrawRectangle(p2.pos.x, p2.pos.y, PADDLE_WIDTH, PADDLE_HEIGHT, WHITE);
 
-            // ball
-            DrawRectangle(WIDTH / 2 - BALL_WIDTH / 2, HEIGHT / 2 - BALL_HEIGHT / 2, BALL_WIDTH, BALL_HEIGHT, WHITE);
+            DrawRectangle(ball.pos.x, ball.pos.y, BALL_WIDTH, BALL_HEIGHT, WHITE);
         EndDrawing();
     }
 
