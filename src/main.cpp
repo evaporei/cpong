@@ -28,6 +28,7 @@ typedef enum State {
 typedef struct Player {
     Vector2 pos;
     unsigned int score;
+    float yspeed;
 } Player;
 
 typedef struct Ball {
@@ -52,18 +53,20 @@ void handle_key_pressed(State *state, Ball *ball) {
 }
 
 void handle_input(Player *p1, Player *p2) {
-    float dt = GetFrameTime();
-
     if (IsKeyDown(KEY_W)) {
-        p1->pos.y = p1->pos.y - PADDLE_SPEED * dt;
+        p1->yspeed = -PADDLE_SPEED;
     } else if (IsKeyDown(KEY_S)) {
-        p1->pos.y = p1->pos.y + PADDLE_SPEED * dt;
+        p1->yspeed = PADDLE_SPEED;
+    } else {
+        p1->yspeed = 0;
     }
 
     if (IsKeyDown(KEY_UP)) {
-        p2->pos.y = p2->pos.y - PADDLE_SPEED * dt;
+        p2->yspeed = -PADDLE_SPEED;
     } else if (IsKeyDown(KEY_DOWN)) {
-        p2->pos.y = p2->pos.y + PADDLE_SPEED * dt;
+        p2->yspeed = PADDLE_SPEED;
+    } else {
+        p2->yspeed = 0;
     }
 }
 
@@ -85,9 +88,14 @@ void ball_init(Ball *ball) {
     ball->velocity = Vector2{GetRandomValue(0, 1) ? BALL_VEL_X : -BALL_VEL_X, GetRandomValue(0, 1) ? BALL_VEL_Y : -BALL_VEL_Y};
 }
 
-void update(State state, Ball *ball) {
+void update(State state, Player *p1, Player *p2, Ball *ball) {
+    float dt = GetFrameTime();
+
+    p1->pos.y += p1->yspeed * dt;
+    p2->pos.y += p2->yspeed * dt;
+
     if (state == PLAY_STATE) {
-        ball->pos = Vector2Add(ball->pos, Vector2Scale(ball->velocity, GetFrameTime()));
+        ball->pos = Vector2Add(ball->pos, Vector2Scale(ball->velocity, dt));
     }
 }
 
@@ -107,8 +115,8 @@ int main(void) {
         (60.f / 2) - title_size.y / 2.f
     };
 
-    Player p1 = { .pos = Vector2{15, 90}, .score = 0 };
-    Player p2 = { .pos = Vector2{WIDTH - 30, HEIGHT - 150}, .score = 0 };
+    Player p1 = { .pos = Vector2{15, 90}, .score = 0, .yspeed = 0 };
+    Player p2 = { .pos = Vector2{WIDTH - 30, HEIGHT - 150}, .score = 0, .yspeed = 0 };
 
     Ball ball;
     ball_init(&ball);
@@ -117,7 +125,7 @@ int main(void) {
         handle_key_pressed(&state, &ball);
         handle_input(&p1, &p2);
 
-        update(state, &ball);
+        update(state, &p1, &p2, &ball);
 
         BeginDrawing();
             ClearBackground(Color{ 40, 45, 52, 255 });
