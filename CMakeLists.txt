@@ -51,6 +51,7 @@ set(SOURCE_FILES
     "${CMAKE_SOURCE_DIR}/src/main.cpp"
     "${CMAKE_SOURCE_DIR}/src/ball.cpp"
     "${CMAKE_SOURCE_DIR}/src/state.cpp"
+    "${CMAKE_SOURCE_DIR}/src/player.cpp"
 )
 
 add_executable(game ${SOURCE_FILES})
