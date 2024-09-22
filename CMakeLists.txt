@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
-project(Game VERSION 1.0 LANGUAGES CXX)
+project(Game VERSION 1.0 LANGUAGES C)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 11)
 
 # Enable Clangd LSP integration with the project
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -46,12 +46,12 @@ add_subdirectory("${THIRDPARTY_DIR}/raylib")
 # Source files
 # ------------------------------------------------------------------------------
 
-set(MY_FLAGS "-std=c++20" "-Wall")
+set(MY_FLAGS "-std=c11" "-Wall")
 set(SOURCE_FILES
-    "${CMAKE_SOURCE_DIR}/src/main.cpp"
-    "${CMAKE_SOURCE_DIR}/src/ball.cpp"
-    "${CMAKE_SOURCE_DIR}/src/player.cpp"
-    "${CMAKE_SOURCE_DIR}/src/scores.cpp"
+    "${CMAKE_SOURCE_DIR}/src/main.c"
+    "${CMAKE_SOURCE_DIR}/src/ball.c"
+    "${CMAKE_SOURCE_DIR}/src/player.c"
+    "${CMAKE_SOURCE_DIR}/src/scores.c"
 )
 
 add_executable(game ${SOURCE_FILES})

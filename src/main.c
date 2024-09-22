@@ -85,20 +85,20 @@ int main(void) {
     Font font = LoadFontEx("./font.ttf", SMALL_FONT_SIZE, NULL, 0);
 
     Vector2 title_size = MeasureTextEx(font, TITLE, SMALL_FONT_SIZE, 0);
-    Vector2 title_pos = Vector2{
+    Vector2 title_pos = {
         (WIDTH / 2.f) - title_size.x / 2.f,
         (60.f / 2) - title_size.y / 2.f
     };
     Vector2 win_size = MeasureTextEx(font, "player x wins!", SMALL_FONT_SIZE, 0);
-    Vector2 win_pos = Vector2{
+    Vector2 win_pos = {
         (WIDTH / 2.f) - win_size.x / 2.f,
         (60.f / 2) - win_size.y / 2.f
     };
 
     Player p1;
-    player_init(&p1, Vector2{15, 90}, KEY_W, KEY_S);
+    player_init(&p1, (Vector2){15, 90}, KEY_W, KEY_S);
     Player p2;
-    player_init(&p2, Vector2{WIDTH - 30, HEIGHT - 150}, KEY_UP, KEY_DOWN);
+    player_init(&p2, (Vector2){WIDTH - 30, HEIGHT - 150}, KEY_UP, KEY_DOWN);
 
     Ball ball;
     ball_init(&ball);
@@ -120,7 +120,7 @@ int main(void) {
         update(state, &p1, &p2, &ball);
 
         BeginDrawing();
-            ClearBackground(Color{ 40, 45, 52, 255 });
+            ClearBackground((Color){ 40, 45, 52, 255 });
 #ifdef DEBUG
             DrawFPS(0, 0);
             // debug_state(state);
@@ -130,8 +130,8 @@ int main(void) {
                 DrawTextEx(font, TITLE, title_pos, SMALL_FONT_SIZE, 0, WHITE);
             }
 
-            DrawTextEx(font, TextFormat("%d", scores.p1), Vector2{WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
-            DrawTextEx(font, TextFormat("%d", scores.p2), Vector2{WIDTH / 2.f + 120, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
+            DrawTextEx(font, TextFormat("%d", scores.p1), (Vector2){WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
+            DrawTextEx(font, TextFormat("%d", scores.p2), (Vector2){WIDTH / 2.f + 120, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
             if (state == WIN_STATE) {
                 DrawTextEx(font, TextFormat("player %d wins!", winning_player), win_pos, SMALL_FONT_SIZE, 0, WHITE);
             }
