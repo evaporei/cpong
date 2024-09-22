@@ -27,6 +27,18 @@ void handle_input(Player *p1, Player *p2) {
     player_handle_input(p2);
 }
 
+void handle_collisions(State state, Player *p1, Player *p2, Ball *ball) {
+    if (state == PLAY_STATE) {
+        if (ball_collides(ball, p1)) {
+            ball_bounce_paddle(ball, p1, RIGHT_DIR);
+        } else if (ball_collides(ball, p2)) {
+            ball_bounce_paddle(ball, p2, LEFT_DIR);
+        }
+
+        ball_bounce_wall(ball);
+    }
+}
+
 void update(State state, Player *p1, Player *p2, Ball *ball) {
     player_update(p1);
     player_update(p2);
@@ -66,6 +78,7 @@ int main(void) {
     while (!WindowShouldClose()) {
         handle_key_pressed(&state, &ball);
         handle_input(&p1, &p2);
+        handle_collisions(state, &p1, &p2, &ball);
         update(state, &p1, &p2, &ball);
 
         BeginDrawing();
