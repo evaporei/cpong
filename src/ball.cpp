@@ -29,6 +29,9 @@ void ball_bounce_paddle(Ball *ball, Player *player, Direction dir) {
         case LEFT_DIR:
             ball->pos.x = player->pos.x - PADDLE_WIDTH;
             break;
+        case NONE_DIR:
+            __builtin_unreachable();
+            break;
     }
 
     ball->velocity.x = -ball->velocity.x * 1.03;
@@ -48,6 +51,16 @@ void ball_bounce_wall(Ball *ball) {
         ball->pos.y = HEIGHT - BALL_HEIGHT;
         ball->velocity.y = -ball->velocity.y;
     }
+}
+
+Direction ball_is_out_of_game(Ball *ball) {
+    if (ball->pos.x + BALL_WIDTH < 0) {
+        return LEFT_DIR;
+    }
+    if (ball->pos.x > WIDTH) {
+        return RIGHT_DIR;
+    }
+    return NONE_DIR;
 }
 
 void ball_update(Ball *ball, State state) {

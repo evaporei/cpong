@@ -6,7 +6,6 @@
 
 void player_init(Player *player, Vector2 pos, KeyboardKey up, KeyboardKey down) {
     player->pos = pos;
-    player->score = 0;
     player->yspeed = 0;
     player->up = up;
     player->down = down;

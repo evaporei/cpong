@@ -7,6 +7,7 @@
 #include "state.h"
 #include "ball.h"
 #include "player.h"
+#include "scores.h"
 
 void handle_key_pressed(State *state, Ball *ball) {
     if (IsKeyPressed(KEY_SPACE)) {
@@ -28,14 +29,22 @@ void handle_input(Player *p1, Player *p2) {
 }
 
 void handle_collisions(State state, Player *p1, Player *p2, Ball *ball) {
-    if (state == PLAY_STATE) {
-        if (ball_collides(ball, p1)) {
-            ball_bounce_paddle(ball, p1, RIGHT_DIR);
-        } else if (ball_collides(ball, p2)) {
-            ball_bounce_paddle(ball, p2, LEFT_DIR);
-        }
+    if (ball_collides(ball, p1)) {
+        ball_bounce_paddle(ball, p1, RIGHT_DIR);
+    } else if (ball_collides(ball, p2)) {
+        ball_bounce_paddle(ball, p2, LEFT_DIR);
+    }
 
-        ball_bounce_wall(ball);
+    ball_bounce_wall(ball);
+}
+
+void handle_score(State *state, Ball *ball, Scores *scores) {
+    Direction dir = ball_is_out_of_game(ball);
+
+    if (dir != NONE_DIR) {
+        scores_increment(scores, dir);
+        ball_init(ball);
+        *state = START_STATE;
     }
 }
 
@@ -75,10 +84,17 @@ int main(void) {
     Ball ball;
     ball_init(&ball);
 
+    Scores scores;
+    scores_init(&scores);
+
     while (!WindowShouldClose()) {
         handle_key_pressed(&state, &ball);
         handle_input(&p1, &p2);
-        handle_collisions(state, &p1, &p2, &ball);
+
+        if (state == PLAY_STATE) {
+            handle_collisions(state, &p1, &p2, &ball);
+            handle_score(&state, &ball, &scores);
+        }
         update(state, &p1, &p2, &ball);
 
         BeginDrawing();
@@ -90,8 +106,8 @@ int main(void) {
 
             DrawTextEx(font, TITLE, title_pos, SMALL_FONT_SIZE, 0, WHITE);
 
-            DrawTextEx(font, TextFormat("%d", p1.score), Vector2{WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
-            DrawTextEx(font, TextFormat("%d", p2.score), Vector2{WIDTH / 2.f + 120, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
+            DrawTextEx(font, TextFormat("%d", scores.p1), Vector2{WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
+            DrawTextEx(font, TextFormat("%d", scores.p2), Vector2{WIDTH / 2.f + 120, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
 
             draw(p1, p2, ball);
         EndDrawing();

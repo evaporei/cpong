@@ -4,7 +4,6 @@
 
 typedef struct Player {
     Vector2 pos;
-    unsigned int score;
     float yspeed;
     KeyboardKey up;
     KeyboardKey down;
