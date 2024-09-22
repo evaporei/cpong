@@ -30,7 +30,14 @@ void ball_bounce_paddle(Ball *ball, Player *player, Direction dir) {
             ball->pos.x = player->pos.x - PADDLE_WIDTH;
             break;
     }
-    ball->velocity.x = -ball->velocity.x;
+
+    ball->velocity.x = -ball->velocity.x * 1.03;
+
+    if (ball->velocity.y < 0) {
+        ball->velocity.y = -GetRandomValue(100, 200);
+    } else {
+        ball->velocity.y = GetRandomValue(100, 200);
+    }
 }
 
 void ball_bounce_wall(Ball *ball) {
