@@ -17,3 +17,5 @@
 
 #define BALL_VEL_X 300.f
 #define BALL_VEL_Y 150.f
+
+#define WINNING_SCORE 10

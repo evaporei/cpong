@@ -50,7 +50,6 @@ set(MY_FLAGS "-std=c++20" "-Wall")
 set(SOURCE_FILES
     "${CMAKE_SOURCE_DIR}/src/main.cpp"
     "${CMAKE_SOURCE_DIR}/src/ball.cpp"
-    "${CMAKE_SOURCE_DIR}/src/state.cpp"
     "${CMAKE_SOURCE_DIR}/src/player.cpp"
     "${CMAKE_SOURCE_DIR}/src/scores.cpp"
 )
