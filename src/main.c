@@ -8,6 +8,9 @@
 #include "ball.h"
 #include "player.h"
 #include "scores.h"
+#include "sounds.h"
+
+Sounds sounds;
 
 void handle_key_pressed(State *state, Ball *ball, Scores *scores, unsigned int *winning_player) {
     if (IsKeyPressed(KEY_SPACE)) {
@@ -36,18 +39,22 @@ void handle_input(Player *p1, Player *p2) {
 
 void handle_collisions(State state, Player *p1, Player *p2, Ball *ball) {
     if (ball_collides(ball, p1)) {
+        sounds_play(&sounds.paddle_hit);
         ball_bounce_paddle(ball, p1, RIGHT_DIR);
     } else if (ball_collides(ball, p2)) {
+        sounds_play(&sounds.paddle_hit);
         ball_bounce_paddle(ball, p2, LEFT_DIR);
     }
-
-    ball_bounce_wall(ball);
+    if (ball_bounce_wall(ball)) {
+        sounds_play(&sounds.wall_hit);
+    }
 }
 
 void handle_score(State *state, Ball *ball, Scores *scores, unsigned int *winning_player) {
     Direction dir = ball_is_out_of_game(ball);
 
     if (dir != NONE_DIR) {
+        sounds_play(&sounds.score);
         ball_init(ball);
         scores_increment(scores, dir);
         if (scores->p1 == WINNING_SCORE) {
@@ -79,6 +86,9 @@ int main(void) {
     SetTraceLogLevel(LOG_ERROR);
 #endif
     InitWindow(WIDTH, HEIGHT, TITLE);
+    InitAudioDevice();
+
+    sounds_init(&sounds);
 
     State state = START_STATE;
 
@@ -141,7 +151,7 @@ int main(void) {
     }
 
     UnloadFont(font);
-
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;

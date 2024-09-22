@@ -43,14 +43,17 @@ void ball_bounce_paddle(Ball *ball, Player *player, Direction dir) {
     }
 }
 
-void ball_bounce_wall(Ball *ball) {
+bool ball_bounce_wall(Ball *ball) {
     if (ball->pos.y < 0) {
         ball->pos.y = 0;
         ball->velocity.y = -ball->velocity.y;
+        return true;
     } else if (ball->pos.y > HEIGHT - BALL_HEIGHT) {
         ball->pos.y = HEIGHT - BALL_HEIGHT;
         ball->velocity.y = -ball->velocity.y;
+        return true;
     }
+    return false;
 }
 
 Direction ball_is_out_of_game(Ball *ball) {
