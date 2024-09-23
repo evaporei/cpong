@@ -140,8 +140,8 @@ int main(void) {
                 DrawTextEx(font, TITLE, title_pos, SMALL_FONT_SIZE, 0, WHITE);
             }
 
-            DrawTextEx(font, TextFormat("%d", scores.p1), (Vector2){WIDTH / 2.f - 150, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
-            DrawTextEx(font, TextFormat("%d", scores.p2), (Vector2){WIDTH / 2.f + 120, HEIGHT / 3.f}, SCORE_FONT_SIZE, 0, WHITE);
+            scores_draw(&font, scores);
+
             if (state == WIN_STATE) {
                 DrawTextEx(font, TextFormat("player %d wins!", winning_player), win_pos, SMALL_FONT_SIZE, 0, WHITE);
             }
