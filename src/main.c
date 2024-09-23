@@ -32,9 +32,13 @@ void handle_key_pressed(State *state, Ball *ball, Scores *scores, unsigned int *
     }
 }
 
+void player_god_ai(Player *player, Ball ball) {
+    player->pos.y = ball.pos.y;
+}
+
 void handle_input(Player *p1, Player *p2) {
     player_handle_input(p1);
-    player_handle_input(p2);
+    /* player_handle_input(p2); */
 }
 
 void handle_collisions(State state, Player *p1, Player *p2, Ball *ball) {
@@ -121,7 +125,9 @@ int main(void) {
 
     while (!WindowShouldClose()) {
         handle_key_pressed(&state, &ball, &scores, &winning_player);
+        // not using p2 if playing with AI
         handle_input(&p1, &p2);
+        player_god_ai(&p2, ball);
 
         if (state == PLAY_STATE) {
             handle_collisions(state, &p1, &p2, &ball);
