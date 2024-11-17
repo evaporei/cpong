@@ -27,21 +27,6 @@ set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
 
 add_subdirectory("${THIRDPARTY_DIR}/raylib")
 
-# add_library(stb_image INTERFACE)
-# target_include_directories(stb_image INTERFACE thirdparty)
-
-# add_library(imgui 
-#   thirdparty/imgui/imgui.cpp
-#   thirdparty/imgui/imgui_draw.cpp
-#   thirdparty/imgui/imgui_widgets.cpp
-#   thirdparty/imgui/imgui_demo.cpp
-#   thirdparty/imgui/imgui_tables.cpp
-#   thirdparty/imgui/backends/imgui_impl_glfw.cpp
-#   thirdparty/imgui/backends/imgui_impl_opengl3.cpp
-# )
-# target_include_directories(imgui PUBLIC thirdparty/imgui)
-# target_link_libraries(imgui PRIVATE glfw)
-
 # ------------------------------------------------------------------------------
 # Source files
 # ------------------------------------------------------------------------------
