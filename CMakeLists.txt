@@ -43,4 +43,8 @@ set(SOURCE_FILES
 add_executable(game ${SOURCE_FILES})
 target_compile_options(game PUBLIC ${MY_FLAGS})
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set_target_properties(game PROPERTIES UNITY_BUILD ON)
+endif()
+
 target_link_libraries(game PUBLIC raylib)
